@@ -199,38 +199,28 @@ fun postMyGuess(json: String, token: String) {
 }
 
 
-fun postGitHubRepoURL(token: String, repoUrl: String): String {
-    val url = "https://interview.tangohq.com/github"
+fun postGitHubRepoURL(token: String, githubRepoURL: String) {
     val client = OkHttpClient()
-
-    // Create JSON payload
-    val json = """
-        {
-          "url": "$repoUrl"
-        }
-    """.trimIndent()
-
     val mediaType = "application/json; charset=utf-8".toMediaType()
-    val body = json.toRequestBody(mediaType)
-
+    val requestBody = "{\"url\": \"$githubRepoURL\"}".toRequestBody(mediaType)
     val request = Request.Builder()
-        .url(url)
-        .post(body)
+        .url("https://interview.tangohq.com/github")
+        .post(requestBody)
         .addHeader("Authorization", "Bearer $token")
         .build()
 
-    val response = client.newCall(request).execute()
-
-    return if (response.isSuccessful) {
-        "GitHub repository URL successfully posted."
-    } else {
-        "Failed to post GitHub repository URL. Response code: ${response.code}, Response message: ${response.message}"
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            println("GitHub repo URL successfully posted.")
+        } else {
+            println("Failed to post GitHub repo URL. Response code: ${response.code}")
+        }
     }
 }
 
 fun main(args: Array<String>) {
 //    welcomeToChallenge()
-    val finalToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJkNTY4NTBjMy1hNDM2LTRkZTQtYWUwOC04NjUzNjllYjU1ZjYiLCJtZXNzYWdlIjoiRGVjb2RpbmcgdGhlIHRva2VuLCBuaWNlLCBoYXZlIGEgcHJpemUiLCJ1cmwiOiIvYm9udXMtam9uYXMiLCJpYXQiOjE3MDA4Nzc2MDJ9.HAMFV8NYAJF_FozcrSiuAZZUh5y0cj-o_CQxvr3KeQs"
+    val finalToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI2MTM3ZWUxYS05YmZlLTRjN2UtYTBhYS00Y2U2ZGMzNzhiMGMiLCJtZXNzYWdlIjoiRGVjb2RpbmcgdGhlIHRva2VuLCBuaWNlLCBoYXZlIGEgcHJpemUiLCJ1cmwiOiIvYm9udXMtam9uYXMiLCJpYXQiOjE3MDA4Nzk3MjF9.3cEHRcc7x7iXNa1OfnOao1Xzr5rEeu4B29h4BSVsTkM"
     val repoUrl = "https://github.com/Asmatar1/TangoHqChallenge.git"
 //    sendGet(finalToken)
 //    guessTheNumber(finalToken)
@@ -273,9 +263,9 @@ fun main(args: Array<String>) {
 //    val asciiText1 = text1.toCharArray().map { it.code }
 //    val asciiText2 = text2.toCharArray().map { it.code }
 //
-//    val printAndFeedLine = listOf(27, 74, 1) // ESC J n for one line
+//    val printAndFeedLine = listOf(27, 74, 1)
 //    val printAndFeedLine2 = listOf(27, 74, 2)
-//    val feedAndPartialCut = listOf(29, 86, 65, 0) // Replace 'm' with the appropriate value for partial cut
+//    val feedAndPartialCut = listOf(29, 86, 65, 0)
 //
 //    val commandChain = asciiText1 + printAndFeedLine + asciiText2 +  printAndFeedLine2 + feedAndPartialCut
 //
@@ -285,5 +275,5 @@ fun main(args: Array<String>) {
 //    postMyGuess(jsonOutput, finalToken)
 
 //    sendUpload(finalToken)
-    postGitHubRepoURL(finalToken, repoUrl)
+//    postGitHubRepoURL(finalToken, repoUrl)
 }
